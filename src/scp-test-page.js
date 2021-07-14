@@ -33,7 +33,9 @@ $(function() {
 				// text/html parsing is natively supported
 				return;
 			}
-		} catch (ex) {}
+		} catch (ex) {
+			// Ignore the error
+		}
 
 		DOMParser_proto.parseFromString = function (markup, type) {
 			if (/^\s*text\/html\s*(?:;|$)/i.test(type)) {
@@ -53,15 +55,15 @@ $(function() {
 
 	//Create Random String for forced Cache Refresh
 	let randomString = (length) => {
-		let result = '';
-		let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		let result = "";
+		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		let charactersLength = characters.length;
 		for ( let i = 0; i < length; i++ ) {
 			result += characters.charAt(Math.floor(Math.random() * 
-	 		charactersLength));
-	   }
-	   return result;
-	}
+			charactersLength));
+		}
+		return result;
+	};
 
 	//Function to inject stylesheets
 	let changeStyleSheet = (cssFile, cssId) => {
@@ -101,7 +103,7 @@ $(function() {
 	let getNewElems = async () => {	
 		$.ajax({
 			url:`https://api.codetabs.com/v1/proxy/?quest=https://scp-wiki.wikidot.com/${scpwikiurl}?${randomString(5)}`,
-			type:'GET',
+			type:"GET",
 			success: function(data){							
 				let href = "href=\"https://scp-wiki.wikidot.com/";
 				let src = "src=\"https://scp-wiki.wikidot.com/";
@@ -123,7 +125,7 @@ $(function() {
 					changeStyleSheet(styleSheets,bhlSheets);				
 				}		
 				$(iframesReplace).each(function(idx,el){
-					el.src = `https://api.codetabs.com/v1/proxy/?quest=${el.src}`
+					el.src = `https://api.codetabs.com/v1/proxy/?quest=${el.src}`;
 				});
 			}
 		});
@@ -138,12 +140,12 @@ $(function() {
 			let lTime = 500;
 			let sTime = 500;
 			let bTime = 2000;
-			$(links).each(function(idx,el){
+			$(links).each(function(_, el){
 				setTimeout( function(){
 					let link = document.createElement("link");
-					let lHref = links[idx].getAttribute("href");
-					let lRel = links[idx].getAttribute("rel");
-					let lTyp = links[idx].getAttribute("type");
+					let lHref = el.getAttribute("href");
+					let lRel = el.getAttribute("rel");
+					let lTyp = el.getAttribute("type");
 					if (lTyp) {
 						link.type = lTyp;	
 					}
@@ -154,15 +156,15 @@ $(function() {
 						link.rel = lRel;					
 					}
 					document.getElementsByTagName("head")[0].appendChild(link);
-				}, lTime)
+				}, lTime);
 				lTime += 500;
 			});			
-			$(scripts).each(function(idx,el){
+			$(scripts).each(function(_, el){
 				setTimeout( function(){
 					let script = document.createElement("script");
-					let pSrc = scripts[idx].getAttribute("src");
-					let pTyp = scripts[idx].getAttribute("type");
-					let pTxt = scripts[idx].innerHTML;
+					let pSrc = el.getAttribute("src");
+					let pTyp = el.getAttribute("type");
+					let pTxt = el.innerHTML;
 					if (pTyp) {
 						script.type = pTyp;
 						if (pSrc) {
@@ -174,15 +176,15 @@ $(function() {
 							document.getElementsByTagName("head")[0].appendChild(script);
 						}			
 					}	
-				}, sTime)
+				}, sTime);
 				sTime += 500;		
 			});
-			$(bScripts).each(function(idx,el){
+			$(bScripts).each(function(_, el){
 				setTimeout( function(){
 					let script = document.createElement("script");
-					let bSrc = bScripts[idx].getAttribute("src");
-					let bTyp = bScripts[idx].getAttribute("type");
-					let bTxt = bScripts[idx].innerHTML;
+					let bSrc = el.getAttribute("src");
+					let bTyp = el.getAttribute("type");
+					let bTxt = el.innerHTML;
 					if (bTyp) {
 						script.type = bTyp;
 						if (bSrc) {
@@ -194,7 +196,7 @@ $(function() {
 							document.getElementsByTagName("body")[0].appendChild(script);
 						}			
 					}	
-				}, bTime)
+				}, bTime);
 				bTime += 500;		
 			});
 		} catch(e) {
@@ -203,5 +205,5 @@ $(function() {
 	};	
 
 	getNewElems();
-	setTimeout(function(){ refreshScripts() }, 1000);
+	setTimeout(function(){ refreshScripts(); }, 1000);
 });
