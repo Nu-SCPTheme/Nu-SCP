@@ -1,7 +1,7 @@
 /* jshint esversion: 8 */
 $(function() {
 	let styleSheets = [];
-	let bhlSheets = "bhl";
+	const bhlSheets = "bhl";
 
 	//Test Relative URLs
 	fetch("../src/css/black-highlighter.css").then(function(resp) {
@@ -54,10 +54,10 @@ $(function() {
 	}(DOMParser));
 
 	//Create Random String for forced Cache Refresh
-	let randomString = (length) => {
+	const randomString = (length) => {
 		let result = "";
-		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		let charactersLength = characters.length;
+		const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		const charactersLength = characters.length;
 		for ( let i = 0; i < length; i++ ) {
 			result += characters.charAt(Math.floor(Math.random() * 
 			charactersLength));
@@ -66,13 +66,13 @@ $(function() {
 	};
 
 	//Function to inject stylesheets
-	let changeStyleSheet = (cssFile, cssId) => {
-		let cssIdSelect = "#" + cssId;
+	const changeStyleSheet = (cssFile, cssId) => {
+		const cssIdSelect = "#" + cssId;
 		if ($(cssIdSelect) && cssFile.length == 1) {
 			$(cssIdSelect).href = cssFile;
 		} else {
 			for (let i = 0; i < cssFile.length; i++) {
-				let link = document.createElement("link");
+				const link = document.createElement("link");
 				link.href = cssFile[i];
 				link.rel = "stylesheet";
 				link.id = cssId;
@@ -82,7 +82,7 @@ $(function() {
 	};
 
 	//Function to pull ?url= parameter
-	let getUrlParameter = (sParam) => {
+	const getUrlParameter = (sParam) => {
 		var sPageURL = window.location.search.substring(1),
 			sURLVariables = sPageURL.split("&"),
 			sParameterName,
@@ -99,26 +99,27 @@ $(function() {
 	};
 
 	//Use codetabs.com to pull source of page & Apply to local page
-	let scpwikiurl = getUrlParameter("url");
-	let getNewElems = async () => {	
+	const scpwikiurl = getUrlParameter("url");
+	const getNewElems = async () => {	
 		$.ajax({
 			url:`https://api.codetabs.com/v1/proxy/?quest=https://scp-wiki.wikidot.com/${scpwikiurl}?${randomString(5)}`,
 			type:"GET",
 			success: function(data){							
-				let href = "href=\"https://scp-wiki.wikidot.com/";
-				let src = "src=\"https://scp-wiki.wikidot.com/";
-				let dp = new DOMParser();
-				let doc = dp.parseFromString(data
-					.replace(/(href="\/)/g, `${href}?${randomString(5)}`)
-					.replace(/(src="\/)/g, `${src}?${randomString(5)}`)
-					.replace(/(http:\/\/)/g, "https://"), 
-					"text/html");			
-				let newHeadContents = doc.getElementsByTagName("head")[0].innerHTML;
-				let newHead = doc.getElementsByTagName("head")[0];
-				let newBody = doc.getElementsByTagName("body")[0];
-				let bhlMinDetect = String(newHeadContents).indexOf("black-highlighter.min.css");
-				let bhlDetect = String(newHeadContents).indexOf("black-highlighter.css");
-				let iframesReplace = document.getElementsByTagName("iframe");
+				const href = "href=\"https://scp-wiki.wikidot.com/";
+				const src = "src=\"https://scp-wiki.wikidot.com/";
+				const doc = new DOMParser().parseFromString(
+					data
+						.replace(/(href="\/)/g, `${href}?${randomString(5)}`)
+						.replace(/(src="\/)/g, `${src}?${randomString(5)}`)
+						.replace(/(http:\/\/)/g, "https://"),
+					"text/html"
+				);
+				const newHeadContents = doc.getElementsByTagName("head")[0].innerHTML;
+				const newHead = doc.getElementsByTagName("head")[0];
+				const newBody = doc.getElementsByTagName("body")[0];
+				const bhlMinDetect = String(newHeadContents).indexOf("black-highlighter.min.css");
+				const bhlDetect = String(newHeadContents).indexOf("black-highlighter.css");
+				const iframesReplace = document.getElementsByTagName("iframe");
 				document.getElementsByTagName("head")[0].appendChild(newHead).after("\n");
 				document.getElementsByTagName("body")[0].appendChild(newBody);					
 				if (bhlDetect == -1 && bhlMinDetect == -1 ) {
@@ -132,16 +133,16 @@ $(function() {
 	};
 
 	//Reapply remotely pulled scripts & links to page to make sure they are run
-	let refreshScripts = async () => {
+	const refreshScripts = async () => {
 		try {
-			let scripts = document.querySelectorAll("head > head > script");
-			let links = document.querySelectorAll("head > head > link");
-			let bScripts = document.querySelectorAll("body > body script");
+			const scripts = document.querySelectorAll("head > head > script");
+			const links = document.querySelectorAll("head > head > link");
+			const bScripts = document.querySelectorAll("body > body script");
 			$(links).each(function(_, el){
-				let link = document.createElement("link");
-				let lHref = el.getAttribute("href");
-				let lRel = el.getAttribute("rel");
-				let lTyp = el.getAttribute("type");
+				const link = document.createElement("link");
+				const lHref = el.getAttribute("href");
+				const lRel = el.getAttribute("rel");
+				const lTyp = el.getAttribute("type");
 				if (lTyp) {
 					link.type = lTyp;
 				}
@@ -154,10 +155,10 @@ $(function() {
 				document.getElementsByTagName("head")[0].appendChild(link);
 			});			
 			$(scripts).each(function(_, el){
-				let script = document.createElement("script");
-				let pSrc = el.getAttribute("src");
-				let pTyp = el.getAttribute("type");
-				let pTxt = el.innerHTML;
+				const script = document.createElement("script");
+				const pSrc = el.getAttribute("src");
+				const pTyp = el.getAttribute("type");
+				const pTxt = el.innerHTML;
 				if (pTyp) {
 					script.type = pTyp;
 					if (pSrc) {
@@ -171,10 +172,10 @@ $(function() {
 				}	
 			});
 			$(bScripts).each(function(_, el){
-				let script = document.createElement("script");
-				let bSrc = el.getAttribute("src");
-				let bTyp = el.getAttribute("type");
-				let bTxt = el.innerHTML;
+				const script = document.createElement("script");
+				const bSrc = el.getAttribute("src");
+				const bTyp = el.getAttribute("type");
+				const bTxt = el.innerHTML;
 				if (bTyp) {
 					script.type = bTyp;
 					if (bSrc) {
