@@ -11,6 +11,7 @@
   "devDependencies": {
     "autoprefixer": "^10.2.5",
     "cssnano": "^5.0.0",
+    "eslint": "^7.30.0",
     "imagemin": "^7.0.1",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-optipng": "^8.0.0",
