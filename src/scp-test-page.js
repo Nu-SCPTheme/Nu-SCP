@@ -137,67 +137,55 @@ $(function() {
 			let scripts = document.querySelectorAll("head > head > script");
 			let links = document.querySelectorAll("head > head > link");
 			let bScripts = document.querySelectorAll("body > body script");
-			let lTime = 500;
-			let sTime = 500;
-			let bTime = 2000;
 			$(links).each(function(_, el){
-				setTimeout( function(){
-					let link = document.createElement("link");
-					let lHref = el.getAttribute("href");
-					let lRel = el.getAttribute("rel");
-					let lTyp = el.getAttribute("type");
-					if (lTyp) {
-						link.type = lTyp;	
-					}
-					if (lHref) {
-						link.href = `${lHref}?${randomString(5)}`;
-					}
-					if (lRel) {
-						link.rel = lRel;					
-					}
-					document.getElementsByTagName("head")[0].appendChild(link);
-				}, lTime);
-				lTime += 500;
+				let link = document.createElement("link");
+				let lHref = el.getAttribute("href");
+				let lRel = el.getAttribute("rel");
+				let lTyp = el.getAttribute("type");
+				if (lTyp) {
+					link.type = lTyp;
+				}
+				if (lHref) {
+					link.href = `${lHref}?${randomString(5)}`;
+				}
+				if (lRel) {
+					link.rel = lRel;					
+				}
+				document.getElementsByTagName("head")[0].appendChild(link);
 			});			
 			$(scripts).each(function(_, el){
-				setTimeout( function(){
-					let script = document.createElement("script");
-					let pSrc = el.getAttribute("src");
-					let pTyp = el.getAttribute("type");
-					let pTxt = el.innerHTML;
-					if (pTyp) {
-						script.type = pTyp;
-						if (pSrc) {
-							script.src = `${pSrc}?${randomString(5)}`;
-							document.getElementsByTagName("head")[0].appendChild(script);
-						}
-						if (pTxt) {
-							script.innerHTML = pTxt;
-							document.getElementsByTagName("head")[0].appendChild(script);
-						}			
-					}	
-				}, sTime);
-				sTime += 500;		
+				let script = document.createElement("script");
+				let pSrc = el.getAttribute("src");
+				let pTyp = el.getAttribute("type");
+				let pTxt = el.innerHTML;
+				if (pTyp) {
+					script.type = pTyp;
+					if (pSrc) {
+						script.src = `${pSrc}?${randomString(5)}`;
+						document.getElementsByTagName("head")[0].appendChild(script);
+					}
+					if (pTxt) {
+						script.innerHTML = pTxt;
+						document.getElementsByTagName("head")[0].appendChild(script);
+					}			
+				}	
 			});
 			$(bScripts).each(function(_, el){
-				setTimeout( function(){
-					let script = document.createElement("script");
-					let bSrc = el.getAttribute("src");
-					let bTyp = el.getAttribute("type");
-					let bTxt = el.innerHTML;
-					if (bTyp) {
-						script.type = bTyp;
-						if (bSrc) {
-							script.src = `${bSrc}?${randomString(5)}`;
-							document.getElementsByTagName("body")[0].appendChild(script);
-						}
-						if (bTxt) {
-							script.innerHTML = bTxt;
-							document.getElementsByTagName("body")[0].appendChild(script);
-						}			
-					}	
-				}, bTime);
-				bTime += 500;		
+				let script = document.createElement("script");
+				let bSrc = el.getAttribute("src");
+				let bTyp = el.getAttribute("type");
+				let bTxt = el.innerHTML;
+				if (bTyp) {
+					script.type = bTyp;
+					if (bSrc) {
+						script.src = `${bSrc}?${randomString(5)}`;
+						document.getElementsByTagName("body")[0].appendChild(script);
+					}
+					if (bTxt) {
+						script.innerHTML = bTxt;
+						document.getElementsByTagName("body")[0].appendChild(script);
+					}			
+				}	
 			});
 		} catch(e) {
 			console.log(e);
