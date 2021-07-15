@@ -19,6 +19,44 @@ $(function () {
 		return new Promise(r => setTimeout(r, ms));
 	}
 
+	//Convert branch language code to wiki name
+	function getLanguageWiki(name) {
+		switch (name) {
+			case "int":
+				return "scp-int";
+			case "en":
+				return "scp-wiki";
+			case "ru":
+				return "scp-ru";
+			case "ko":
+				return "scpko";
+			case "cn":
+				return "scp-wiki-cn";
+			case "fr":
+				return "fondationscp";
+			case "pl":
+				return "scp-pl";
+			case "es":
+				return "lafundacionscp";
+			case "th":
+				return "scp-th";
+			case "jp":
+				return "scp-jp";
+			case "de":
+				return "scp-wiki-de";
+			case "it":
+				return "fondazionescp";
+			case "ua":
+				return "scp-ukrainian";
+			case "pt":
+				return "scp-pt-br";
+			case "zh-tr":
+				return "scp-zh-tr";
+			default:
+				return null;
+		}
+	}
+
 	//Polyfill for DOMParser
 	(function (DOMParser) {
 		"use strict";
@@ -79,79 +117,38 @@ $(function () {
 		}
 	};
 
-	//Function to pull ?url= parameter
-	let getUrlParameter = (sParam) => {
-		var sPageURL = window.location.search.substring(1),
-			sURLVariables = sPageURL.split("&"),
-			sParameterName,
-			i;
+	//Extract parameters into a map
+	let urlParams;
+	if (URLSearchParams !== undefined) {
+		let urlSearchParams = new URLSearchParams(window.location.search);
+		urlParams = Object.fromEntries(urlSearchParams.entries());
+	} else {
+		urlParams = {};
+		let urlSearchParts = window.location.search.split("&");
+		for (let i = 0; i < urlSearchParts.length; i++) {
+			let urlParameter = urlSearchParts[i].split("=");
+			let urlParameterName = urlParameter[0];
+			let urlParameterValue = urlParameter[1];
 
-		for (i = 0; i < sURLVariables.length; i++) {
-			sParameterName = sURLVariables[i].split("=");
-
-			if (sParameterName[0] === sParam) {
-				return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-			}
+			urlParams[urlParameterName] = decodeURIComponent(urlParameterValue);
 		}
-		return false;
-	};
+	}
+
+	//Get parameters
+	let page = urlParams.url || "scp-001";
+	let siteName = urlParams.site || "en";
+
+	//Get wiki slug
+	let siteURL = getLanguageWiki(siteName);
+	if (siteURL === null) {
+		//Fallback, use the parameter as the actual wiki slug
+		siteURL = siteName;
+	}
 
 	//Use codetabs.com to pull source of page & Apply to local page
-	let scpwikiurl = getUrlParameter("url");
-
-	let sitePara = getUrlParameter("site");
-	let siteURL;
-
-	switch (sitePara) {
-		case "int":
-			siteURL = "scp-int";
-			break;
-		case "ru":
-			siteURL = "scp-ru";
-			break;
-		case "ko":
-			siteURL = "scpko";
-			break;
-		case "cn":
-			siteURL = "scp-wiki-cn";
-			break;
-		case "fr":
-			siteURL = "fondationscp";
-			break;
-		case "pl":
-			siteURL = "scp-pl";
-			break;
-		case "es":
-			siteURL = "lafundacionscp";
-			break;
-		case "th":
-			siteURL = "scp-th";
-			break;
-		case "jp":
-			siteURL = "scp-jp";
-			break;
-		case "de":
-			siteURL = "scp-wiki-de";
-			break;
-		case "it":
-			siteURL = "fondazionescp";
-			break;
-		case "ua":
-			siteURL = "scp-ukrainian";
-			break;
-		case "pt":
-			siteURL = "scp-pt-br";
-			break;
-		case "zh-tr":
-			siteURL = "scp-zh-tr";
-			break;
-		default:
-			siteURL = "scp-wiki";
-	}
-  
 	let getNewElems = async () => {
 		$.ajax({
-			url: `https://api.codetabs.com/v1/proxy/?quest=https://${siteURL}.wikidot.com/${scpwikiurl}?${randomString(5)}`,
+			url: `https://api.codetabs.com/v1/proxy/?quest=https://${siteURL}.wikidot.com/${page}?${randomString(5)}`,
 			type: 'GET',
 			success: function (data) {
 				let href = `href=\"https://${siteURL}.wikidot.com/`;
@@ -259,7 +256,7 @@ $(function () {
 			if (bhlDetect == -1 && bhlMinDetect == -1 ) {
 				changeStyleSheet(styleSheets,bhlSheets);
 			}
-		});	
+		});
 	};
 
 	finalInit();
